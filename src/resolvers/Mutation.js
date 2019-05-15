@@ -31,12 +31,10 @@ const mutations = {
     );
   },
 
-  async deleteItem(parent, args, ctx, info) {
-    const where = { id: args.id };
+  async deleteItem(parent, { id }, ctx, info) {
+    const item = await ctx.db.query.item({ where: { id } }, `{ id title }`);
 
-    const item = await ctx.db.query.item({ where }, `{ id title }`);
-
-    return ctx.db.mutation.deleteItem({ where }, info);
+    return ctx.db.mutation.deleteItem({ where: { id } }, info);
   },
 
   async createUser(parent, args, ctx, info) {
@@ -53,6 +51,27 @@ const mutations = {
       info
     );
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    ctx.response.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week cookie
+    });
+
+    return user;
+  },
+
+  async login(parent, { email, password }, ctx, info) {
+    const user = await ctx.db.query.user({ where: { email } });
+    if (!user) {
+      throw new Error('Invalid login credentials');
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      throw new Error('Invalid login credentials');
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+
     ctx.response.cookie('token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week cookie
