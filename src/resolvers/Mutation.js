@@ -45,7 +45,19 @@ const mutations = {
   },
 
   async deleteItem(parent, { id }, ctx, info) {
-    const item = await ctx.db.query.item({ where: { id } }, `{ id title }`);
+    const item = await ctx.db.query.item(
+      { where: { id } },
+      `{ id title user {id} }`
+    );
+
+    const ownsItem = item.user.id === ctx.request.userId;
+    const hasPermissions = ctx.request.user.permissions.some(permission =>
+      ['ADMIN', 'ITEMDELETE'].includes(permission)
+    );
+
+    if (!ownsItem && !hasPermissions) {
+      throw new Error('Action not allowed');
+    }
 
     return ctx.db.mutation.deleteItem({ where: { id } }, info);
   },
