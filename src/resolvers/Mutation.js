@@ -6,9 +6,18 @@ const { transport, createEmail } = require('../mail');
 
 const mutations = {
   async createItem(parent, args, ctx, info) {
+    if (!ctx.request.userId) {
+      throw new Error('Please login first');
+    }
+
     const item = await ctx.db.mutation.createItem(
       {
         data: {
+          user: {
+            connect: {
+              id: ctx.request.userId,
+            },
+          },
           ...args,
         },
       },
