@@ -98,6 +98,10 @@ const mutations = {
   },
 
   async requestReset(parent, args, ctx, info) {
+    if (!args.email) {
+      throw new Error('You must enter a valid email address');
+    }
+
     const user = await ctx.db.query.user({ where: { email: args.email } });
     if (!user) {
       return {
@@ -107,7 +111,7 @@ const mutations = {
 
     const resetToken = (await promisify(randomBytes)(20)).toString('hex');
     const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
-    const res = await ctx.db.mutation.updateUser({
+    await ctx.db.mutation.updateUser({
       where: { email: args.email },
       data: { resetToken, resetTokenExpiry },
     });
