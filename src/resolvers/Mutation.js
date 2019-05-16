@@ -79,6 +79,11 @@ const mutations = {
 
     return user;
   },
+
+  logout(parent, args, ctx, info) {
+    ctx.response.clearCookie('token');
+    return { message: 'Logged Out' };
+  },
 };
 
 module.exports = mutations;
