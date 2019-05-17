@@ -224,7 +224,6 @@ const mutations = {
     });
 
     if (existingCartItem) {
-      console.log('incrementing 1');
       return ctx.db.mutation.updateCartItem(
         {
           where: { id: existingCartItem.id },

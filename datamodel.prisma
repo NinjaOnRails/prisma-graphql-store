@@ -38,6 +38,6 @@ type CartItem {
   quantity: Int! @default(value: 1)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  item: Item!
+  item: Item
   user: User!
 }
