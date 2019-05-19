@@ -51,6 +51,8 @@ type OrderItem {
   price: Int!
   quantity: Int! @default(value: 1)
   user: User
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Order {
@@ -59,4 +61,6 @@ type Order {
   total: Int!
   user: User!
   charge: String!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
