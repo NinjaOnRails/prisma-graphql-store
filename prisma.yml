@@ -1,4 +1,5 @@
-#endpoint: ${env:PRISMA_ENDPOINT}
+# endpoint: ${env:PRISMA_ENDPOINT}
+# endpoint: https://us1.prisma.sh/duos-glass/dev3/dev
 endpoint: https://dannys-store-prod-290343ca08.herokuapp.com/prod/prod
 datamodel: datamodel.prisma
 secret: ${env:PRISMA_SECRET}

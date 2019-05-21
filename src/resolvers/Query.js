@@ -42,7 +42,8 @@ const Query = {
     const hasPermissionToSeeOrder = ctx.request.user.permissions.includes(
       'ADMIN'
     );
-    if (!ownsOrder || !hasPermissionToSeeOrder) {
+    
+    if (!ownsOrder && !hasPermissionToSeeOrder) {
       throw new Error('Action not allowed');
     }
 
